@@ -1,0 +1,30 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local environment and secrets
+.env
+.env.*
+.secret_key
+
+# Live/local databases — do not publish auction records
+db.sqlite3
+db.sqlite3-*
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+
+# Logs
+*.log
+
+# Editors and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

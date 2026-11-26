@@ -1,0 +1,38 @@
+{% extends "clerk/base.html" %}
+{% block title %}Sale events | Auction Clerk{% endblock %}
+{% block content %}
+  <div class="event-row">
+    <div>
+      <h1>Sale events</h1>
+      <p class="muted">Create an event, record lots, then print buyer checkout sheets.</p>
+    </div>
+    <a class="btn gold" href="{% url 'event_new' %}">+ New sale event</a>
+  </div>
+
+  <div class="card">
+    {% if events %}
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Sale</th><th>Date</th><th>Location</th><th class="num">Lots</th><th class="num">Bidders</th><th></th></tr></thead>
+          <tbody>
+            {% for event in events %}
+              <tr>
+                <td><a href="{% url 'event_detail' event.pk %}"><strong>{{ event.title }}</strong></a></td>
+                <td>{{ event.sale_date|date:"M j, Y" }}</td>
+                <td>{{ event.location|default:"—" }}</td>
+                <td class="num">{{ event.sales.count }}</td>
+                <td class="num">{{ event.bidders.count }}</td>
+                <td class="row-actions">
+                  <a class="btn small secondary" href="{% url 'event_edit' event.pk %}">Edit</a>
+                  <a class="btn small danger" href="{% url 'event_delete' event.pk %}">Delete</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="empty">No sale events yet. Click <strong>New sale event</strong> to start one.</p>
+    {% endif %}
+  </div>
+{% endblock %}

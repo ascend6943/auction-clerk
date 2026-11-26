@@ -1,0 +1,15 @@
+{% extends "clerk/base.html" %}
+{% block title %}Bidder #{{ bidder.number }} | {{ event.title }}{% endblock %}
+{% block content %}
+  <div class="event-row no-print">
+    <div>
+      <h1>Bidder #{{ bidder.number }}</h1>
+      <p class="muted">{{ event.title }}</p>
+    </div>
+    <div>
+      <button class="btn gold" type="button" data-print>Print sheet</button>
+      <a class="btn secondary" href="{% url 'event_detail' event.pk %}">Back to workspace</a>
+    </div>
+  </div>
+  {% include "clerk/invoice.html" with page_break=False %}
+{% endblock %}

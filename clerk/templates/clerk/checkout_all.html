@@ -1,0 +1,42 @@
+{% extends "clerk/base.html" %}
+{% block title %}Checkout sheets | {{ event.title }}{% endblock %}
+{% block content %}
+  <div class="event-row no-print">
+    <div>
+      <h1>Checkout sheets</h1>
+      <p class="muted">{{ event.title }} &middot; one sheet per bidder with recorded lots</p>
+    </div>
+    <div>
+      <button class="btn gold" type="button" data-print>Print all</button>
+      <a class="btn secondary" href="{% url 'event_detail' event.pk %}">Back to workspace</a>
+    </div>
+  </div>
+
+  <section class="card no-print">
+    <h2>Find one buyer</h2>
+    <p class="muted">Type a bidder number or name, then open that person's checkout sheet.</p>
+    <form method="get"
+          style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
+      <div class="field" style="flex: 1; min-width: 240px; margin-bottom: 0;">
+        <label for="checkout-lookup">Buyer</label>
+        <input type="text" id="checkout-lookup" name="buyer" list="checkout-bidder-options"
+               value="{{ query }}" required autocomplete="off" placeholder="Type # or name">
+        {% if lookup_error %}<p class="errors">{{ lookup_error }}</p>{% endif %}
+        <datalist id="checkout-bidder-options">
+          {% for bidder in bidders %}
+            <option value="{{ bidder }}" data-bidder-id="{{ bidder.pk }}" data-number="{{ bidder.number }}"></option>
+          {% endfor %}
+        </datalist>
+      </div>
+      <button class="btn" type="submit">Open checkout sheet</button>
+    </form>
+  </section>
+
+  {% if rows %}
+    {% for row in rows %}
+      {% include "clerk/invoice.html" with bidder=row.bidder sales=row.sales total=row.total page_break=True %}
+    {% endfor %}
+  {% else %}
+    <div class="card"><p class="empty">No bidders with lots yet.</p></div>
+  {% endif %}
+{% endblock %}

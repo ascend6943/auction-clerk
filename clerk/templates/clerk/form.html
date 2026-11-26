@@ -1,0 +1,42 @@
+{% extends "clerk/base.html" %}
+{% block title %}{{ title }} | Auction Clerk{% endblock %}
+{% block content %}
+  {% if event %}
+    <p><a href="{% url 'event_detail' event.pk %}">&larr; Back to {{ event.title }}</a></p>
+  {% endif %}
+  <div class="card" style="max-width: 720px;">
+    <h1>{{ title }}</h1>
+    <form method="post">
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="errors">{{ form.non_field_errors }}</div>{% endif %}
+      {% if form.bidder_lookup %}
+        {% include "clerk/bidder_lookup.html" with form=form %}
+      {% endif %}
+      {% if form.catalog_choices %}
+        <datalist id="lot-options">
+          {% for lot in form.catalog_choices %}
+            <option value="{{ lot.number }}" data-description="{{ lot.description }}" data-quantity="{{ lot.quantity }}"></option>
+          {% endfor %}
+        </datalist>
+      {% endif %}
+      {% for field in form %}
+        {% if field.name != "bidder_lookup" and field.name != "bidder" %}
+          <div class="field" style="margin-bottom: 12px;">
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.help_text %}<small class="help">{{ field.help_text }}</small>{% endif %}
+            {{ field.errors }}
+          </div>
+        {% endif %}
+      {% endfor %}
+      <div class="actions">
+        <button class="btn" type="submit">{{ submit_label }}</button>
+        {% if cancel_args %}
+          <a class="btn secondary" href="{% url cancel_url cancel_args.0 %}">Cancel</a>
+        {% else %}
+          <a class="btn secondary" href="{% url cancel_url %}">Cancel</a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+{% endblock %}

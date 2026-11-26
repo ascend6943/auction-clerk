@@ -1,0 +1,10 @@
+<div class="tabs no-print">
+  <a href="{% url 'event_detail' event.pk %}" {% if active == "workspace" %}class="active"{% endif %}>Workspace</a>
+  <a href="{% url 'catalog_lots' event.pk %}" {% if active == "lots" %}class="active"{% endif %}>Pre-load lots</a>
+  <a href="{% url 'checkout_all' event.pk %}" {% if active == "checkout" %}class="active"{% endif %}>Checkout sheets</a>
+  <a href="{% url 'event_edit' event.pk %}" {% if active == "details" %}class="active"{% endif %}>Sale details</a>
+  <a href="{% url 'export_csv' event.pk %}">Export CSV</a>
+  <a href="{% url 'export_xlsx' event.pk %}">Export XLSX</a>
+  <a href="{% url 'event_list' %}">All sales</a>
+  <a class="delete" href="{% url 'event_delete' event.pk %}">Delete sale</a>
+</div>

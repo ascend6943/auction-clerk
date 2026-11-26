@@ -1,0 +1,39 @@
+<article class="invoice{% if page_break %} page-break{% endif %}">
+  <div class="invoice-head">
+    <div>
+      <h2>{{ event.title }}</h2>
+      <div class="muted">Buyer checkout sheet</div>
+    </div>
+    <div style="text-align: right;">
+      <strong>Bidder #{{ bidder.number }}</strong><br>
+      {{ bidder.name|default:"(name not recorded)" }}
+    </div>
+  </div>
+
+  <div class="invoice-meta">
+    <div><strong>Sale date:</strong> {{ event.sale_date|date:"F j, Y" }}</div>
+    <div><strong>Location:</strong> {{ event.location|default:"—" }}</div>
+    <div><strong>Phone:</strong> {{ bidder.phone|default:"—" }}</div>
+    <div><strong>Items:</strong> {{ sales|length }} lot(s)</div>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Lot</th><th>Description</th><th class="num">Qty</th><th class="num">Unit price</th><th class="num">Total</th></tr>
+    </thead>
+    <tbody>
+      {% for sale in sales %}
+        <tr>
+          <td>{{ sale.lot|default:"—" }}</td>
+          <td>{{ sale.description }}</td>
+          <td class="num">{{ sale.quantity }}</td>
+          <td class="num">${{ sale.amount|floatformat:2 }}</td>
+          <td class="num">${{ sale.line_total|floatformat:2 }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="invoice-total">Total due: ${{ total|floatformat:2 }}</div>
+  {% if bidder.notes %}<p class="muted"><strong>Notes:</strong> {{ bidder.notes }}</p>{% endif %}
+</article>

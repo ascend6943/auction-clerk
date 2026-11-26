@@ -1,0 +1,122 @@
+{% extends "clerk/base.html" %}
+{% block title %}{{ event.title }} | Auction Clerk{% endblock %}
+{% block content %}
+  <h1>{{ event.title }}</h1>
+  <p class="muted">
+    {{ event.sale_date|date:"l, F j, Y" }}
+    {% if event.location %}&middot; {{ event.location }}{% endif %}
+  </p>
+
+  {% include "clerk/event_tabs.html" with active="workspace" %}
+
+  <div class="stats">
+    <div class="stat"><b>${{ total_sales|floatformat:2 }}</b><small>Total sales</small></div>
+    <div class="stat"><b>{{ sales|length }}</b><small>Lots recorded</small></div>
+    <div class="stat"><b>{{ bidder_rows|length }}</b><small>Bidders</small></div>
+    <div class="stat"><b>{{ unassigned_count }}</b><small>Unassigned lots</small></div>
+  </div>
+
+  <div class="two-col">
+    <section class="card no-print">
+      <h2>Record a sale</h2>
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="add_sale">
+        {% if sale_form.non_field_errors %}<div class="errors">{{ sale_form.non_field_errors }}</div>{% endif %}
+        <div class="field-grid">
+          {% include "clerk/field.html" with field=sale_form.lot %}
+          <div class="wide">{% include "clerk/field.html" with field=sale_form.description %}</div>
+          {% include "clerk/field.html" with field=sale_form.amount %}
+          {% include "clerk/field.html" with field=sale_form.quantity %}
+          {% include "clerk/bidder_lookup.html" with form=sale_form %}
+          <div class="wide">{% include "clerk/field.html" with field=sale_form.notes %}</div>
+        </div>
+        <datalist id="lot-options">
+          {% for lot in sale_form.catalog_choices %}
+            <option value="{{ lot.number }}" data-description="{{ lot.description }}" data-quantity="{{ lot.quantity }}"></option>
+          {% endfor %}
+        </datalist>
+        <div class="actions"><button class="btn gold" type="submit">Record sale</button></div>
+      </form>
+    </section>
+
+    <section class="card no-print">
+      <h2>Add a bidder</h2>
+      <p class="muted">Bidders start at #1 for each sale. Names can be added later.</p>
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="add_bidder">
+        {% if bidder_form.non_field_errors %}<div class="errors">{{ bidder_form.non_field_errors }}</div>{% endif %}
+        {% include "clerk/field.html" with field=bidder_form.number %}
+        {% include "clerk/field.html" with field=bidder_form.name %}
+        {% include "clerk/field.html" with field=bidder_form.phone %}
+        {% include "clerk/field.html" with field=bidder_form.notes %}
+        <div class="actions"><button class="btn" type="submit">Add bidder</button></div>
+      </form>
+    </section>
+  </div>
+
+  <section class="card">
+    <h2>Sales ledger</h2>
+    {% if sales %}
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Lot</th><th>Description</th><th class="num">Amount</th><th class="num">Qty</th><th class="num">Total</th><th>Bidder</th><th class="no-print"></th></tr>
+          </thead>
+          <tbody>
+            {% for sale in sales %}
+              <tr>
+                <td>{{ sale.lot|default:"—" }}</td>
+                <td>{{ sale.description }}</td>
+                <td class="num">${{ sale.amount|floatformat:2 }}</td>
+                <td class="num">{{ sale.quantity }}</td>
+                <td class="num"><strong>${{ sale.line_total|floatformat:2 }}</strong></td>
+                <td>
+                  {% if sale.bidder %}
+                    <a href="{% url 'checkout_bidder' event.pk sale.bidder.pk %}">#{{ sale.bidder.number }}</a>
+                    {{ sale.bidder.name }}
+                  {% else %}<span class="muted">Unassigned</span>{% endif %}
+                </td>
+                <td class="no-print row-actions">
+                  <a class="btn small secondary" href="{% url 'sale_edit' sale.pk %}">Edit</a>
+                  <a class="btn small secondary" href="{% url 'sale_delete' sale.pk %}">Delete</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="empty">No lots recorded yet. Use the form above to record the first sale.</p>
+    {% endif %}
+  </section>
+
+  <section class="card">
+    <h2>Bidders</h2>
+    {% if bidder_rows %}
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Name</th><th>Phone</th><th class="num">Lots</th><th class="num">Total</th><th class="no-print"></th></tr></thead>
+          <tbody>
+            {% for row in bidder_rows %}
+              <tr>
+                <td><a href="{% url 'checkout_bidder' event.pk row.bidder.pk %}">#{{ row.bidder.number }}</a></td>
+                <td>{{ row.bidder.name|default:"—" }}</td>
+                <td>{{ row.bidder.phone|default:"—" }}</td>
+                <td class="num">{{ row.count }}</td>
+                <td class="num">${{ row.total|floatformat:2 }}</td>
+                <td class="no-print row-actions">
+                  <a class="btn small secondary" href="{% url 'bidder_edit' row.bidder.pk %}">Edit</a>
+                  <a class="btn small secondary" href="{% url 'bidder_delete' row.bidder.pk %}">Delete</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="empty">No bidders registered yet.</p>
+    {% endif %}
+  </section>
+{% endblock %}

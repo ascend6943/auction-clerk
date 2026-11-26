@@ -1,0 +1,19 @@
+{% extends "clerk/base.html" %}
+{% block title %}Confirm delete | Auction Clerk{% endblock %}
+{% block content %}
+  <div class="card" style="max-width: 620px;">
+    <h1>Delete {{ description }}?</h1>
+    <p class="muted">This cannot be undone.</p>
+    <form method="post">
+      {% csrf_token %}
+      <div class="actions">
+        <button class="btn danger" type="submit">Yes, delete</button>
+        {% if cancel_args %}
+          <a class="btn secondary" href="{% url cancel_url cancel_args.0 %}">Cancel</a>
+        {% else %}
+          <a class="btn secondary" href="{% url cancel_url %}">Cancel</a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+{% endblock %}

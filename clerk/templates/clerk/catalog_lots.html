@@ -1,0 +1,53 @@
+{% extends "clerk/base.html" %}
+{% block title %}Pre-load lots | {{ event.title }}{% endblock %}
+{% block content %}
+  <h1>Pre-load lots</h1>
+  <p class="muted">{{ event.title }} &middot; set up items before the sale</p>
+
+  {% include "clerk/event_tabs.html" with active="lots" %}
+
+  <section class="card">
+    <h2>Add an item</h2>
+    <p class="muted">In Workspace &rarr; Record a sale, typing a pre-loaded lot number fills in the item and quantity. You enter the amount and buyer at sale time.</p>
+    <form method="post">
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="errors">{{ form.non_field_errors }}</div>{% endif %}
+      <div class="field-grid">
+        {% include "clerk/field.html" with field=form.number %}
+        <div class="wide">{% include "clerk/field.html" with field=form.description %}</div>
+        {% include "clerk/field.html" with field=form.quantity %}
+        <div class="wide">{% include "clerk/field.html" with field=form.notes %}</div>
+      </div>
+      <div class="actions"><button class="btn gold" type="submit">Pre-load lot</button></div>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Pre-loaded items</h2>
+    {% if rows %}
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Lot</th><th>Description</th><th class="num">Qty</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            {% for row in rows %}
+              <tr>
+                <td>#{{ row.lot.number }}</td>
+                <td>{{ row.lot.description }}</td>
+                <td class="num">{{ row.lot.quantity }}</td>
+                <td>
+                  {% if row.sold %}<span class="pill sold">Sold</span>{% else %}<span class="pill available">Available</span>{% endif %}
+                </td>
+                <td class="row-actions">
+                  <a class="btn small secondary" href="{% url 'catalog_lot_edit' row.lot.pk %}">Edit</a>
+                  <a class="btn small secondary" href="{% url 'catalog_lot_delete' row.lot.pk %}">Delete</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="empty">No lots pre-loaded yet. Add the first item above.</p>
+    {% endif %}
+  </section>
+{% endblock %}

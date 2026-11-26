@@ -1,0 +1,11 @@
+<div class="field">
+  {{ form.bidder_lookup.label_tag }}
+  {{ form.bidder_lookup }}
+  {% if form.bidder_lookup.help_text %}<small class="help">{{ form.bidder_lookup.help_text }}</small>{% endif %}
+  {{ form.bidder_lookup.errors }}
+</div>
+<datalist id="bidder-options">
+  {% for choice in form.bidder_choices %}
+    <option value="{{ choice.label }}" data-bidder-id="{{ choice.id }}" data-number="{{ choice.number }}"></option>
+  {% endfor %}
+</datalist>
