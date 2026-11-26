@@ -1,8 +1,13 @@
 # Auction Clerk
 
-A small Django app for clerking an auction sale on a local network. It replaces a
-manual clerking spreadsheet: a sales ledger, numbered bidders, per-bidder
-checkout sheets, and spreadsheet exports.
+A small Django app for clerking a small family sale on a local network. It is
+built for one or a few modest family auctions, not for commercial auction houses
+or public internet use. It replaces a manual clerking spreadsheet: a sales
+ledger, numbered bidders, per-bidder checkout sheets, and spreadsheet exports.
+
+## Screenshot
+
+![Auction Clerk workspace for a test family sale](docs/auction-clerk-workspace.png)
 
 ## Features
 

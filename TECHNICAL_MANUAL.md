@@ -8,7 +8,8 @@ For day-to-day use, see `USER_GUIDE.md`.
 ## 1. Scope and design
 
 Auction Clerk is a Django application served over a LAN with Django's development
-server. It is intentionally simple:
+server. It is intended for one or a few small family sales on a trusted local
+network, not for commercial auction operations. It is intentionally simple:
 
 - one SQLite database file;
 - no login/authentication;
@@ -257,6 +258,8 @@ workspace/
     ├── README.md                  # Short project overview
     ├── USER_GUIDE.md              # End-user instructions
     ├── TECHNICAL_MANUAL.md        # This document
+    ├── docs/                      # Screenshots used in the README
+    │   └── auction-clerk-workspace.png
     ├── db.sqlite3                 # Live application database
     ├── .secret_key                # Locally generated secret (gitignored)
     │

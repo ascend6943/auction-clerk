@@ -1,8 +1,10 @@
 # Auction Clerk — User Guide
 
-Auction Clerk is a small web app for recording an auction sale on a local network.
-It keeps each sale event separate, with its own bidders, pre-loaded lots, sales
-ledger, checkout sheets, and exports.
+Auction Clerk is a small web app for recording a small family sale on a local
+network. It is intended for modest family auctions on a trusted LAN, not for
+commercial auction houses or public internet use. It keeps each sale event
+separate, with its own bidders, pre-loaded lots, sales ledger, checkout sheets,
+and exports.
 
 There is **no login screen** and no sample data. Use it only on a trusted LAN.
 Data is saved in the app's database as you work; stopping the server does not
