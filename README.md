@@ -41,9 +41,10 @@ it up before making changes. Only to intentionally start over, delete it and run
 ```
 
 Dependencies are installed in the sibling `.venv` (`django` and `openpyxl`).
-On first run, Django generates a private `.secret_key` file in this directory;
-keep it out of source control and back it up with the database if you want
-sessions to survive a reinstall. Set `DJANGO_SECRET_KEY` to override it.
+When settings are first loaded, the app generates a private `.secret_key` file
+in this directory; keep it out of source control and back it up with the
+database if you want sessions to survive a reinstall. Set `DJANGO_SECRET_KEY`
+to override it.
 
 ## Tests
 
